@@ -2,7 +2,7 @@
 
 По мотивам https://learn.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/?view=aspnetcore-6.0
 
-Можно и в VS 2022 извращаться, только все действия типа скаффолда выполнять из терминала. Преимущество VS2022 только в удобстве при подборе версий нугетов на совместимось.
+Можно и в VS 2022 извращаться, только все действия типа скаффолда выполнять из терминала. Преимущество VS2022 только в удобстве при подборе версий нугетов на совместимось по сравнению с Code "из коробки".
 
 Зачинаем как обычно под net6.0:
 
@@ -42,7 +42,7 @@ dotnet tool uninstall --global dotnet-ef
 dotnet tool install --global dotnet-ef
 ```
 
-> Пока и самые свежие (седьмые) версии под 6.0 втают. Если что-то проапгрейдят и полезут ошибки, то под net6.0 хоть как оставят `dotnet tool install --global dotnet-aspnet-codegenerator --version 6.0.10` и `dotnet tool install --global dotnet-ef --version 6.0.11`
+> Пока и самые свежие (седьмые) версии под 6.0 встают. Если что-то проапгрейдят и полезут ошибки, то под net6.0 хоть как оставят `dotnet tool install --global dotnet-aspnet-codegenerator --version 6.0.10` и `dotnet tool install --global dotnet-ef --version 6.0.11`
 
 А вот дальше точно разброс. Прёмся в [нугетнятину](https://www.nuget.org/). Интересующий нас Pomelo.EntityFrameworkCore.MySql в стабильной версии 6.0.2, забираем:
 
@@ -65,7 +65,7 @@ MySqlConnector (>= 2.1.2)
 dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.11
 ```
 
-Далее по списку опять же после проверки:
+Далее по списку, опять же после проверки:
 
 ```
 dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design --version 6.0.10
@@ -92,6 +92,23 @@ dotnet aspnet-codegenerator razorpage -m Movie -dc RazorPagesMovieContext -udl -
 
 > При использовании кода из репозитария данную команду выполнять не надоть - странички уже сгенерены.
 
+<details><summary>Примечание</summary>
+
+
+Фактически нам под net6.0 нужны лишь помимо "глобальных":
+- Pomelo.EntityFrameworkCore.MySql --version 6.0.2
+- Microsoft.EntityFrameworkCore.Design --version 6.0.11
+- Microsoft.VisualStudio.Web.CodeGeneration.Design --version 6.0.10
+- Microsoft.EntityFrameworkCore.SqlServer --version 6.0.11
+
+Ведь пользоваться sqlite не планируем. Из самой команды генерации страниц выкинем упоминание о sqlite и на всякий вонючий добавим указание на требуемую версию net:
+
+```
+dotnet aspnet-codegenerator razorpage -m Movie -dc RazorPagesMovieContext -udl -outDir Pages/Movies --referenceScriptLibraries -tfm net6.0
+```
+
+</details>
+
 Всё прошло штатно и свои Pages получили. Осталось настроить соединение с РЕАЛЬНОЙ бд. Поэтому прёмся в appsettings.json и добавляем RazorPagesMovieContext_MySql:
 
 ```
@@ -111,7 +128,7 @@ builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("RazorPagesMovieContext_MySql") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found."), serverVersion));
 ```
 
-Компилируемся или строимся... относительно NET я так и не вкуриваю строгой точности терминов - ведь получаем ни рыбу, ни мясо - какой-то полуисполнимый код.
+Компилируемся или строимся... относительно NET я так и не вкуриваю строгой точности терминов - ведь получаем ни рыбу, ни мясо - какой-то полуисполняемый код.
 
 ```
 dotnet build

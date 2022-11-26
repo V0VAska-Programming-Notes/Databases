@@ -1,4 +1,6 @@
 ﻿using EF_Code_First.Data;
+using Microsoft.EntityFrameworkCore;
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -45,5 +47,17 @@ internal class Program
                 Console.WriteLine(item.Message);
             }
         }
+    }
+}
+
+public class MyContextFactory : Microsoft.EntityFrameworkCore.Design.IDesignTimeDbContextFactory<MyContext>
+{
+    public MyContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
+        var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));
+        optionsBuilder.UseMySql("server=ub2204-srv-dev.basyambia.home;user=vovaska;password=passw0rd!;database=ef_code_first", serverVersion);
+
+        return new MyContext(optionsBuilder.Options);
     }
 }

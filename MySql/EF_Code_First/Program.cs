@@ -11,7 +11,7 @@ internal class Program
     {
         using (var context = new MyContext())
         {
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
 
             if (context.MyRecords.Any())
             {

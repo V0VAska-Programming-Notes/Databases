@@ -8,6 +8,11 @@ public class MyContext : DbContext
     {
     }
 
+    public MyContext(DbContextOptions<MyContext> options)
+        : base(options)
+    {
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));

@@ -28,7 +28,7 @@ public class MyRecord
 }
 ```
 
-Устанавливаем пакет с Помело:
+Устанавливаем пакет с Помелом:
 
 ```
 dotnet add package Pomelo.EntityFrameworkCore.MySql --version 6.0.2
@@ -123,3 +123,13 @@ internal class Program
 ```
 
 Запущаем 'dotnet run'.
+
+## Design-time - миграции и пр.
+
+Поскольку у нас присутствует конструктор контекста без параметров, и сам контекст настраивается в OnConfiguring, то согласно [условию](https://learn.microsoft.com/en-us/ef/core/cli/dbcontext-creation?tabs=dotnet-core-cli#using-a-constructor-with-no-parameters), достаточно установить:
+
+```
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.11
+```
+
+и функционал будет доступен. Для проверки даже можно добавить конструктор с параметром опций.
